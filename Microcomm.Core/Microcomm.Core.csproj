@@ -42,15 +42,18 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigUtils.cs" />
-    <Compile Include="DateTimeUtils.cs" />
-    <Compile Include="FormatUtils.cs" />
-    <Compile Include="GUIDUtils.cs" />
-    <Compile Include="HttpClientUtil.cs" />
-    <Compile Include="ModelCloneUtils.cs" />
+    <Compile Include="Extensions\JsonResultDataExtension.cs" />
+    <Compile Include="JsonResultData.cs" />
+    <Compile Include="StatusCodes.cs" />
+    <Compile Include="Utils\ConfigUtils.cs" />
+    <Compile Include="Utils\DateTimeUtils.cs" />
+    <Compile Include="Utils\FormatUtils.cs" />
+    <Compile Include="Utils\GUIDUtils.cs" />
+    <Compile Include="Utils\HttpClientUtil.cs" />
+    <Compile Include="Utils\ModelCloneUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleEncrypt.cs" />
-    <Compile Include="UbbUtils.cs" />
+    <Compile Include="Utils\SimpleEncrypt.cs" />
+    <Compile Include="Utils\UbbUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
