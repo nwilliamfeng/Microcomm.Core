@@ -36,7 +36,26 @@ namespace Microcomm
             }
         }
 
-        
+        public async Task<T> Get<T>(string path , IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+        {
+
+            var cookieContainer = new CookieContainer();
+            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = _baseUrl })
+            {
+                if (cookie != null)
+                    cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
+
+                if (headers != null)
+                    headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
+                var httpResponse = await client.GetAsync(path);
+                httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+                string responseBody = await httpResponse.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(responseBody);
+            }
+        }
+
+
 
 
     }
