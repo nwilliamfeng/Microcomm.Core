@@ -55,6 +55,7 @@
     <Compile Include="Utils\GUIDUtils.cs" />
     <Compile Include="Utils\HttpClientUtil.cs" />
     <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\MimeTypeHelper.cs" />
     <Compile Include="Utils\ModelCloneUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\SimpleEncrypt.cs" />
