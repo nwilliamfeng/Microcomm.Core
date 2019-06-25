@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\JsonResultDataExtension.cs" />
+    <Compile Include="JsonResultData.Generic.cs" />
     <Compile Include="JsonResultData.cs" />
     <Compile Include="Security\ITokenIdentify.cs" />
     <Compile Include="StatusCodes.cs" />

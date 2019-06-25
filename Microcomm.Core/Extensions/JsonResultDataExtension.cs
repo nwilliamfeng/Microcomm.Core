@@ -9,13 +9,26 @@ namespace Microcomm
     public static class JsonResultDataExtension
     {
 
-        public static JsonResultData<T>  SetSuccess<T> (this JsonResultData<T> result)
+        public static JsonResultData  SetSuccess  (this JsonResultData  result)
         {
             result.StatusCode = StatusCodes.SUCCESS;
             return result;
         }
 
-        public static JsonResultData<T> SetFail<T> (this JsonResultData<T> result, string message = null)
+        public static JsonResultData<T> SetSuccess<T>(this JsonResultData<T> result)
+        {
+            result.StatusCode = StatusCodes.SUCCESS;
+            return result;
+        }
+
+        public static JsonResultData  SetFail  (this JsonResultData  result, string message = null)
+        {
+            result.StatusCode = StatusCodes.FAIL;
+            result.Message = message;
+            return result;
+        }
+
+        public static JsonResultData<T> SetFail<T>(this JsonResultData<T> result, string message = null)
         {
             result.StatusCode = StatusCodes.FAIL;
             result.Message = message;
@@ -23,7 +36,13 @@ namespace Microcomm
         }
 
 
-        public static JsonResultData<T> SetStatusCode<T>(this JsonResultData<T> result,int statusCode)
+        public static JsonResultData  SetStatusCode (this JsonResultData result,int statusCode)
+        {
+            result.StatusCode = statusCode;
+            return result;
+        }
+
+        public static JsonResultData<T> SetStatusCode<T>(this JsonResultData<T> result, int statusCode)
         {
             result.StatusCode = statusCode;
             return result;
@@ -42,10 +61,10 @@ namespace Microcomm
             return new JsonResultData<string> { Data =null, StatusCode = StatusCodes.ERROR, Message = ex.Message };
         }
 
-        public static JsonResultData<bool> ToJson(this bool result,string message=null)
-        {
-            return new JsonResultData<bool> { Data = result, StatusCode =result? StatusCodes.SUCCESS:StatusCodes.FAIL,Message=message };
-        }
+        //public static JsonResultData  ToJson(this bool result,string message=null)
+        //{
+        //    return new JsonResultData  { Data = result, StatusCode =result? StatusCodes.SUCCESS:StatusCodes.FAIL,Message=message };
+        //}
 
        
 

@@ -28,7 +28,7 @@ namespace Microcomm
             {
                 if (cookie != null)
                     cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
-
+                var s = JsonConvert.SerializeObject(value);
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(value));
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                 if (headers != null)

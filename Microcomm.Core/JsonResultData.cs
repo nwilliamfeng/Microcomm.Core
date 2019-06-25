@@ -6,11 +6,11 @@ using System.Web;
 
 namespace Microcomm
 {
-    public class JsonResultData<T>
+    public class JsonResultData 
     {
         public int StatusCode { get; set; }
 
-        public T Data { get; set; }
+        public object Data { get; set; }
 
         public string Message { get; set; }
 
