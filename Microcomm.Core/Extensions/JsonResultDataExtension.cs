@@ -58,7 +58,7 @@ namespace Microcomm
 
         public static JsonResultData<string> ToJson(this Exception ex)
         {
-            return new JsonResultData<string> { Data =null, StatusCode = StatusCodes.ERROR, Message = ex.Message };
+            return new JsonResultData<string> {  StatusCode = StatusCodes.ERROR, Message = ex.Message };
         }
 
         //public static JsonResultData  ToJson(this bool result,string message=null)

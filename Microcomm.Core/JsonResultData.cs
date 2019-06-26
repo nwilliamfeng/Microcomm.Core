@@ -10,11 +10,25 @@ namespace Microcomm
     {
         public int StatusCode { get; set; }
 
-        public object Data { get; set; }
+        private object _data = null;
+        public object Data
+        {
+            get { return this._data; }
+            set
+            {
+                this.SetData(value);
+            }
+        }
 
         public string Message { get; set; }
 
         public int Count { get; set; }
+
+
+        protected virtual void SetData(object data)
+        {
+            this._data = data;
+        }
 
      
     }
