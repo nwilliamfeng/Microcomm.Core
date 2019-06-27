@@ -10,18 +10,145 @@ using Newtonsoft.Json;
 
 namespace Microcomm
 {
+
+    //public class HttpClientUtil
+    //{
+    //    private readonly Uri _baseUrl;
+
+    //    public HttpClientUtil(string baseUrl) => this._baseUrl = new Uri(baseUrl);
+
+    //    public event EventHandler<HttpProgressEventArgs> HttpSendProgress;
+
+
+    //    public event EventHandler<HttpProgressEventArgs> HttpReceiveProgress;
+
+
+    //    private ProgressMessageHandler BuildProgressHandle()
+    //    {
+    //        var result = new ProgressMessageHandler();
+    //        result.HttpReceiveProgress += (s, e) => this.HttpReceiveProgress?.Invoke(this, e);
+    //        result.HttpSendProgress += (s, e) => this.HttpSendProgress?.Invoke(this, e);
+    //        return result;
+    //    }
+
+    //    public async Task<T> Get<T>(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+    //    {
+    //        var cookieContainer = new CookieContainer();
+    //        using (var progressMessageHandler = BuildProgressHandle())
+    //        using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+    //        using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
+    //        {
+    //            client.BaseAddress = this._baseUrl;
+    //            if (cookie != null)
+    //                cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
+    //            client.AppendHeaders(headers);
+    //            var httpResponse = await client.GetAsync(path);
+    //            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+    //            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+    //            return JsonConvert.DeserializeObject<T>(responseBody);
+    //        }
+    //    }
+
+    //    public async Task<T> PostWithJson<T>(string path, object value, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+    //    {
+    //        var cookieContainer = new CookieContainer();
+    //        using (var progressMessageHandler = BuildProgressHandle())
+    //        using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+    //        using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
+    //        {
+    //            client.BaseAddress = this._baseUrl;
+    //            if (cookie != null)
+    //                cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
+    //            var s = JsonConvert.SerializeObject(value);
+    //            HttpContent content = new StringContent(JsonConvert.SerializeObject(value), System.Text.Encoding.UTF8, "application/json");
+    //            //  content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+    //            if (headers != null)
+    //                headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
+    //            var httpResponse = await client.PostAsync(path, content);
+    //            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+    //            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+    //            return JsonConvert.DeserializeObject<T>(responseBody);
+    //        }
+    //    }
+
+
+    //    public async Task<byte[]> Download(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+    //    {
+    //        var cookieContainer = new CookieContainer();
+    //        using (var progressMessageHandler = BuildProgressHandle())
+    //        using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+    //        using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
+    //        {
+    //            client.BaseAddress = this._baseUrl;
+    //            if (cookie != null)
+    //                cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
+    //            if (headers != null)
+    //                headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
+    //            var httpResponse = await client.GetAsync(path);
+    //            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+    //            return await httpResponse.Content.ReadAsByteArrayAsync();
+    //        }
+    //    }
+
+    //    public async Task<string> Upload(string path, string[] filePaths, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+    //    {
+    //        foreach (var filePath in filePaths)
+    //            if (!System.IO.File.Exists(filePath))
+    //                throw new ArgumentException("不存在的文件：" + filePath);
+
+    //        var contents = filePaths.Select(filePath => new Tuple<string, byte[]>(Path.GetFileName(filePath), System.IO.File.ReadAllBytes(filePath))).ToList();
+
+    //        var cookieContainer = new CookieContainer();
+    //        using (var progressMessageHandler = BuildProgressHandle())
+    //        using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+    //        using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
+    //        {
+    //            client.BaseAddress = _baseUrl;
+    //            if (cookie != null)
+    //                cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
+    //            if (headers != null)
+    //                headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
+    //            using (var content = new MultipartFormDataContent())
+    //            {
+    //                contents.ForEach(x =>
+    //                {
+    //                    var httpContent = new StreamContent(new MemoryStream(x.Item2));
+    //                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Microcomm.MimeTypeHelper.GetMimeType(Path.GetExtension(x.Item1)));
+    //                    content.Add(httpContent, "upload_" + Path.GetFileName(x.Item1), x.Item1);
+    //                });
+    //                using (var message = await client.PostAsync(path, content))
+    //                {
+    //                    var input = await message.Content.ReadAsStringAsync();
+    //                    return input;
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //}
+
+
     public class HttpClientUtil
     {
-        private readonly Uri _baseUrl;
+   
+        private HttpClient ClientInstance { get; set; }
+        private CookieContainer CookieContainer { get; set; }
 
-        public HttpClientUtil(string baseUrl) => this._baseUrl = new Uri(baseUrl);
+        public HttpClientUtil(string baseUrl)
+        {
+            CookieContainer = new CookieContainer();
+            var progressMessageHandler = BuildProgressHandle();
+            var handler = new HttpClientHandler() { CookieContainer = this.CookieContainer };
+            this.ClientInstance = HttpClientFactory.Create(handler, progressMessageHandler);
+            this.ClientInstance.BaseAddress = new Uri(baseUrl);
+        }
 
         public event EventHandler<HttpProgressEventArgs> HttpSendProgress;
 
 
         public event EventHandler<HttpProgressEventArgs> HttpReceiveProgress;
 
-
+        private Uri BaseUri => this.ClientInstance.BaseAddress;
 
 
         private ProgressMessageHandler BuildProgressHandle()
@@ -32,107 +159,63 @@ namespace Microcomm
             return result;
         }
 
-        public async Task<T> Get<T>(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+        private void InitizeClient(IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
         {
+            this.CookieContainer.Clear(this.BaseUri).AddRange(this.BaseUri, cookies);
+            this.ClientInstance.ClearHeaders().AppendHeaders(headers);
+        }
 
-            var cookieContainer = new CookieContainer();
-            using (var progressMessageHandler = BuildProgressHandle())
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
-            {
-                client.BaseAddress = this._baseUrl;
-                if (cookie != null)
-                    cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
-
-                if (headers != null)
-                    headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
-                var httpResponse = await client.GetAsync(path);
-                httpResponse.EnsureSuccessStatusCode();//用来抛异常的
-                string responseBody = await httpResponse.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(responseBody);
-            }
+        public async Task<T> Get<T>(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
+        {
+            this.InitizeClient(headers,cookies);
+            var httpResponse = await ClientInstance.GetAsync(path);
+            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(responseBody);
         }
 
         public async Task<T> PostWithJson<T>(string path, object value, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
         {
-
-            var cookieContainer = new CookieContainer();
-            using (var progressMessageHandler = BuildProgressHandle())
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
-            {
-                client.BaseAddress = this._baseUrl;
-                if (cookie != null)
-                    cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
-                var s = JsonConvert.SerializeObject(value);
-                HttpContent content = new StringContent(JsonConvert.SerializeObject(value));
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                if (headers != null)
-                    headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
-                var httpResponse = await client.PostAsync(path, content);
-                httpResponse.EnsureSuccessStatusCode();//用来抛异常的
-                string responseBody = await httpResponse.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T>(responseBody);
-            }
+            this.InitizeClient();
+            var s = JsonConvert.SerializeObject(value);
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(value), System.Text.Encoding.UTF8, "application/json");
+            var httpResponse = await this.ClientInstance.PostAsync(path, content);
+            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+            string responseBody = await httpResponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(responseBody);
         }
 
 
-        public async Task<byte[]> Download(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+        public async Task<byte[]> Download(string path, IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
         {
-
-            var cookieContainer = new CookieContainer();
-            using (var progressMessageHandler = BuildProgressHandle())
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
-            {
-                client.BaseAddress = this._baseUrl;
-                if (cookie != null)
-                    cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
-
-                if (headers != null)
-                    headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
-                var httpResponse = await client.GetAsync(path);
-                httpResponse.EnsureSuccessStatusCode();//用来抛异常的
-                return await httpResponse.Content.ReadAsByteArrayAsync();
-            }
+            this.InitizeClient(headers,cookies);
+            var httpResponse = await ClientInstance.GetAsync(path);
+            httpResponse.EnsureSuccessStatusCode();//用来抛异常的
+            return await httpResponse.Content.ReadAsByteArrayAsync();
         }
 
-        public async Task<string> Upload(string path, string[] filePaths, IDictionary<string, string> headers = null, IDictionary<string, string> cookie = null)
+        public async Task<string> Upload(string path, string[] filePaths, IDictionary<string, string> headers = null, IDictionary<string, string> cookies = null)
         {
             foreach (var filePath in filePaths)
                 if (!System.IO.File.Exists(filePath))
                     throw new ArgumentException("不存在的文件：" + filePath);
-
-            var contents = filePaths.Select(filePath => new Tuple<string, byte[]>(Path.GetFileName(filePath), System.IO.File.ReadAllBytes(filePath))).ToList();
-
-            var cookieContainer = new CookieContainer();
-            using (var progressMessageHandler = BuildProgressHandle())
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (var client = HttpClientFactory.Create(handler, progressMessageHandler))
+            this.InitizeClient(headers,cookies);
+            var contents = filePaths.Select(filePath => new Tuple<string, byte[]>(Path.GetFileName(filePath), System.IO.File.ReadAllBytes(filePath))).ToList();          
+            using (var content = new MultipartFormDataContent())
             {
-
-                client.BaseAddress = _baseUrl;
-                if (cookie != null)
-                    cookie.ToList().ForEach(k => cookieContainer.Add(_baseUrl, new Cookie(k.Key, k.Value)));
-                if (headers != null)
-                    headers.ToList().ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
-                using (var content = new MultipartFormDataContent())
+                contents.ForEach(x =>
                 {
-                    contents.ForEach(x =>
-                    {
-                        var httpContent = new StreamContent(new MemoryStream(x.Item2));
-                        httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Microcomm.MimeTypeHelper.GetMimeType(Path.GetExtension(x.Item1)));
-                        content.Add(httpContent, "upload_" + Path.GetFileName(x.Item1), x.Item1);
-                    });
-
-                    using (var message = await client.PostAsync(path, content))
-                    {
-                        var input = await message.Content.ReadAsStringAsync();
-
-                        return input;
-                    }
+                    var httpContent = new StreamContent(new MemoryStream(x.Item2));
+                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Microcomm.MimeTypeHelper.GetMimeType(Path.GetExtension(x.Item1)));
+                    content.Add(httpContent, "upload_" + Path.GetFileName(x.Item1), x.Item1);
+                });
+                using (var message = await this.ClientInstance.PostAsync(path, content))
+                {
+                    var input = await message.Content.ReadAsStringAsync();
+                    return input;
                 }
             }
+
         }
 
     }

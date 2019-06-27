@@ -48,6 +48,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\CookieContainerExtension.cs" />
+    <Compile Include="Extensions\HttpClientExtension.cs" />
     <Compile Include="Extensions\JsonResultDataExtension.cs" />
     <Compile Include="JsonResultData.Generic.cs" />
     <Compile Include="JsonResultData.cs" />
