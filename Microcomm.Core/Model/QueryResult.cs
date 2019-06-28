@@ -10,7 +10,7 @@ namespace Microcomm.Model
         where T:class
     {
 
-        public int TotalCount { get; set; } = 0;
+         public int TotalCount { get; set; } = 0;
 
         public List<T> Items { get; set; } = new List<T>();
 

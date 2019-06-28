@@ -8,8 +8,8 @@ namespace Microcomm.Model
 {
     public class QueryConditionWithTimeRange:QueryCondition
     {
-        public DateTime StartTime { get; set; } = DateTime.MinValue;
-        public DateTime EndTime { get; set; } = DateTime.MinValue;
+         public DateTime StartTime { get; set; } = DateTime.MinValue;
+         public DateTime EndTime { get; set; } = DateTime.MinValue;
 
 
         public bool IsTimeAvailable => StartTime != DateTime.MinValue && EndTime != DateTime.MinValue && StartTime < EndTime;

@@ -8,10 +8,10 @@ namespace Microcomm.Model
 {
     public class QueryCondition
     {
-        public int PageIndex { get; set; } = 0;
-        public int PageSize { get; set; } = 20;
+         public int PageIndex { get; set; } = 0;
+         public int PageSize { get; set; } = 20;
 
-        public SortMode Sort { get; set; }
+         public SortMode Sort { get; set; }
 
         public override int GetHashCode()
         {
