@@ -7,7 +7,7 @@
     <ProjectGuid>{D6C9ECC1-24CB-4B77-88B9-B706E63963B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microcomm.Core</RootNamespace>
+    <RootNamespace>Microcomm</RootNamespace>
     <AssemblyName>Microcomm.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,6 +53,10 @@
     <Compile Include="Extensions\JsonResultDataExtension.cs" />
     <Compile Include="JsonResultData.Generic.cs" />
     <Compile Include="JsonResultData.cs" />
+    <Compile Include="Model\QueryCondition.cs" />
+    <Compile Include="Model\QueryConditionWithTimeRange.cs" />
+    <Compile Include="Model\QueryResult.cs" />
+    <Compile Include="Model\SortMode.cs" />
     <Compile Include="Security\ITokenIdentify.cs" />
     <Compile Include="StatusCodes.cs" />
     <Compile Include="Utils\ConfigUtils.cs" />

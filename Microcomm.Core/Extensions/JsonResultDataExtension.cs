@@ -49,9 +49,8 @@ namespace Microcomm
         }
 
         public static JsonResultData<T> ToJsonResultData<T>(this T obj)
-        {
-            var count = obj is System.Collections.IEnumerable ? (obj as System.Collections.IEnumerable).Cast<object>().Count() : 0;
-            return new JsonResultData<T> {Count=count, Data = obj, StatusCode = StatusCodes.SUCCESS };
+        {      
+            return new JsonResultData<T> { Data = obj, StatusCode = StatusCodes.SUCCESS };
         }
 
 

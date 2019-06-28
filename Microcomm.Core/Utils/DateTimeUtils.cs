@@ -14,7 +14,7 @@ namespace Microcomm
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>
-        public static long ToTimeStamp(DateTime datetime)
+        public static long ToTimeStamp(this DateTime datetime)
         {
             return (long)datetime.ToUniversalTime().Subtract(_starttime).TotalMilliseconds;
         }
@@ -68,7 +68,7 @@ namespace Microcomm
         /// </summary>  
         /// <param name="datetime"></param>  
         /// <returns></returns>  
-        public static DateTime GetWeekDay(DateTime datetime, int n)
+        public static DateTime GetWeekDay(this DateTime datetime, int n)
         {
             //星期一为第一天  
             int weeknow = Convert.ToInt32(datetime.DayOfWeek);

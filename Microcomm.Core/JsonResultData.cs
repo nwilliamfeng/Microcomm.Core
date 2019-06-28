@@ -22,9 +22,7 @@ namespace Microcomm
 
         public string Message { get; set; }
 
-        public int Count { get; set; }
-
-
+        
         protected virtual void SetData(object data)
         {
             this._data = data;
